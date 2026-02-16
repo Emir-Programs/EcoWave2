@@ -1,0 +1,122 @@
+.rank-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.rank-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.rank-header h2 {
+  color: var(--green);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+/* Пьедестал */
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  height: 200px;
+}
+
+.podium-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+}
+
+.avatar-wrapper {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: var(--shadow);
+  border: 3px solid #bdc3c7;
+  margin-bottom: 10px;
+}
+
+.avatar-wrapper.main {
+  width: 80px;
+  height: 80px;
+  border-color: #f1c40f; /* Золотой */
+  font-size: 2.5rem;
+}
+
+.crown {
+  font-size: 1.5rem;
+  margin-bottom: -10px;
+  z-index: 1;
+}
+
+.podium-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.step {
+  width: 100%;
+  background: var(--green);
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 10px 10px 0 0;
+  font-weight: 800;
+  font-size: 0.8rem;
+}
+
+.second .step { height: 60px; background: #95a5a6; }
+.first .step { height: 90px; background: #f1c40f; }
+.third .step { height: 40px; background: #cd7f32; }
+
+/* Список */
+.rank-list {
+  background: white;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.list-item.me {
+  background-color: var(--light-green);
+  border-left: 5px solid var(--green);
+}
+
+.list-rank {
+  width: 40px;
+  font-weight: 800;
+  color: #7f8c8d;
+}
+
+.list-avatar {
+  margin-right: 15px;
+  font-size: 1.2rem;
+}
+
+.list-name {
+  flex-grow: 1;
+  font-weight: 600;
+}
+
+.list-xp {
+  font-weight: 800;
+  color: var(--green);
+}

@@ -1,0 +1,272 @@
+/* --- Глобальные переменные и сброс настроек --- */
+:root {
+  --green: #27ae60;
+  --dark-green: #1e8449;
+  --light-green: #f0fdf4;
+  --white: #ffffff;
+  --bg: #f4f7f6;
+  --text: #2d3436;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* --- НАВИГАЦИЯ (Mobile First) --- */
+.main-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 75px;
+  background: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+}
+
+.nav-logo {
+  display: none;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.nav-item {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #95a5a6;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.nav-item .icon {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+}
+
+.nav-item.active {
+  color: var(--green);
+  transform: translateY(-8px);
+}
+
+.content {
+  padding-bottom: 90px;
+}
+
+/* --- ПК ВЕРСИЯ --- */
+@media (min-width: 769px) {
+  .main-nav {
+    top: 0;
+    bottom: auto;
+    height: 80px;
+    padding: 0 10%;
+    justify-content: space-between;
+    border-radius: 0;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-logo {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--green);
+    letter-spacing: -1px;
+  }
+
+  .nav-links {
+    width: auto;
+    gap: 50px;
+  }
+
+  .nav-item {
+    flex-direction: row;
+    gap: 8px;
+    font-size: 1rem;
+  }
+
+  .nav-item .icon {
+    font-size: 1.2rem;
+  }
+
+  .nav-item.active {
+    transform: none;
+    border-bottom: 3px solid var(--green);
+    padding-bottom: 5px;
+  }
+
+  .content {
+    padding-top: 80px;
+    padding-bottom: 0;
+  }
+}
+
+.screen-placeholder {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #bdc3c7;
+  font-weight: 600;
+}
+
+/* --- FOOTER MINIMAL --- */
+.footer-minimal {
+  padding: 80px 5% 40px;
+  background-color: var(--bg-color);
+  border-top: 1px solid var(--light-gray);
+  margin-top: 50px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 80px;
+}
+
+@media (max-width: 768px) {
+  .footer-content { flex-direction: column; gap: 50px; }
+}
+
+.footer-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #999;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.developer-name {
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.developer-bio {
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+  max-width: 300px;
+  line-height: 1.6;
+}
+
+.footer-stats {
+  display: flex;
+  gap: 80px;
+}
+
+@media (max-width: 480px) {
+  .footer-stats { flex-direction: column; gap: 30px; }
+}
+
+/* Счетчик посещений */
+.counter-flex {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.count-num {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--accent-green);
+}
+
+/* Пульсирующая точка "Live" */
+.dot-live {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-green);
+  border-radius: 50%;
+  position: relative;
+}
+
+.dot-live::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--accent-green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* Ссылки */
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.social-links a {
+  text-decoration: none;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: var(--accent-green);
+}
+
+/* Самый низ футера */
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--light-gray);
+  padding-top: 30px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #bbb;
+}
+
+.lang-switcher {
+  display: flex;
+  gap: 10px;
+}
+
+.lang-switcher button {
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+  transition: all 0.3s;
+}
+
+.lang-switcher button:hover {
+  background: var(--accent-green);
+  color: white;
+  border-color: var(--accent-green);
+}

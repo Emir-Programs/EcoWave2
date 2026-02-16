@@ -1,0 +1,61 @@
+
+
+/* МАГИЯ: Перекрашиваем карту в салатовый через фильтры */
+/* Этот фильтр делает карту зеленоватой, яркой и необычной */
+.leaflet-tile-container {
+  filter: hue-rotate(40deg) saturate(1.5) brightness(0.9) contrast(1.1) invert(0.05);
+}
+
+/* Стили для попапа внутри карты */
+.leaflet-popup-content-wrapper {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 5px;
+}
+
+.popup-info {
+  text-align: center;
+}
+
+.popup-info h3 {
+  margin: 0 0 10px;
+  color: #2d3436;
+}
+
+
+/* Чтобы карта на ПК не уходила под верхнее меню */
+@media (min-width: 769px) {
+  .map-container {
+    height: calc(100vh - 80px);
+  }
+}
+/* Сделай карту на весь экран, но оставь место под навигацию */
+.map-container {
+  height: calc(100vh - 70px); 
+  width: 100%;
+  border-radius: 0;
+}
+
+/* Красивая кнопка в попепе */
+.take-btn {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.take-btn:hover {
+  background: #27ae60;
+  transform: scale(1.05);
+}
+
+/* Тень для карты, чтобы она выглядела объемнее */
+.leaflet-container {
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+}
