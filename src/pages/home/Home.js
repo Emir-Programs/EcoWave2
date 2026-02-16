@@ -68,7 +68,7 @@ const Home = () => {
           </div>
           <div className="step-item">
             <h3>Earn</h3>
-            <p>Получай XP и баллы. Обменивай их на кофе, скидки в магазинах или уникальный мерч Eco-Wave.</p>
+            <p>Получай XP и баллы. Ставновись лучшим в топе и получай призы от нашего проекта.</p>
           </div>
         </div>
       </section>
@@ -84,5 +84,6 @@ const Home = () => {
     </div>
   );
 };
+
 
 export default Home;
