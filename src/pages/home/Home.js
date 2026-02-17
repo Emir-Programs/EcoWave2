@@ -5,9 +5,8 @@ import './Home.css';
 import '../../app/i18n'
 import { useTranslation } from "react-i18next";
 
-const Home = () => {
+const Home = (t) => {
   const navigate = useNavigate();
-   const { t, i18n } = useTranslation();
 
   
   return (
@@ -91,4 +90,5 @@ const Home = () => {
 
 
 export default Home;
+
 
