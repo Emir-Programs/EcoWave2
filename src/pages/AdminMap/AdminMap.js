@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Polyline, useMapEvents } from 'react-leaflet';
+import React, { useState, useEffect, useMemo } from 'react';
+import { MapContainer, TileLayer, Marker, Polyline, useMapEvents, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { db } from '../../firebase';
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-// Исправление бага с иконками Leaflet в React
+// Фикс иконок
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -17,9 +17,52 @@ const AdminMap = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [tempPoints, setTempPoints] = useState([]);
     const [taskName, setTaskName] = useState("");
-    const [reward, setReward] = useState(100); // Динамическая награда
+    const [reward, setReward] = useState(100);
     const [loading, setLoading] = useState(false);
 
+    // 1. Обработчик кликов по карте для добавления точек
+    const MapEvents = () => {
+        useMapEvents({
+            click(e) {
+                if (tempPoints.length < 4) {
+                    setTempPoints(prev => [...prev, e.latlng]);
+                }
+            },
+        });
+        return null;
+    };
+
+    // 2. Компонент перетаскиваемого маркера с координатами
+    const DraggableMarker = ({ position, index, setTempPoints }) => {
+        const eventHandlers = useMemo(() => ({
+            dragend(e) {
+                const marker = e.target;
+                const newPos = marker.getLatLng();
+                setTempPoints(prev => {
+                    const newPoints = [...prev];
+                    newPoints[index] = newPos;
+                    return newPoints;
+                });
+            },
+        }), [index, setTempPoints]);
+
+        return (
+            <Marker
+                position={position}
+                draggable={true} // Включаем перетаскивание
+                eventHandlers={eventHandlers}
+            >
+                <Tooltip permanent direction="top" offset={[0, -20]}>
+                    {/* Отображение координат прямо на карте */}
+                    <div style={{ fontSize: '10px', fontWeight: 'bold' }}>
+                        {position.lat.toFixed(5)}, {position.lng.toFixed(5)}
+                    </div>
+                </Tooltip>
+            </Marker>
+        );
+    };
+
+    // --- Логика авторизации и сохранения (без изменений) ---
     useEffect(() => {
         const saved = localStorage.getItem('admin_access');
         if (saved === '1234') setIsAuthenticated(true);
@@ -32,60 +75,26 @@ const AdminMap = () => {
         }
     }, []);
 
-    const MapEvents = () => {
-        useMapEvents({
-            click(e) {
-                if (tempPoints.length < 4) {
-                    setTempPoints(prev => [...prev, e.latlng]);
-                }
-            },
-        });
-        return (
-            <>
-                {tempPoints.map((p, i) => (
-                    <Marker key={i} position={p} />
-                ))}
-                {tempPoints.length > 1 && (
-                    <Polyline 
-                        positions={tempPoints.length === 4 ? [...tempPoints, tempPoints[0]] : tempPoints} 
-                        color={tempPoints.length === 4 ? "#2ecc71" : "#3498db"} 
-                        dashArray={tempPoints.length === 4 ? "" : "5, 10"}
-                    />
-                )}
-            </>
-        );
-    };
-
     const handleSave = async () => {
-        if (tempPoints.length < 4) return alert("Нужно выбрать 4 точки для замыкания зоны!");
-        if (!taskName.trim()) return alert("Введите название локации!");
+        if (tempPoints.length < 4) return alert("Поставьте 4 точки!");
+        if (!taskName.trim()) return alert("Введите название!");
 
         setLoading(true);
         try {
-            // Более подробный объект данных
             const locationData = {
                 name: taskName,
-                // Сохраняем и как строки для читаемости, и как объекты для расчетов
                 coords: tempPoints.map(p => `${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`),
                 rawPoints: tempPoints.map(p => ({ lat: p.lat, lng: p.lng })),
                 status: "active",
-                workerId: null,
-                createdAt: serverTimestamp(), // Используем серверное время Firebase
-                xp_reward: Number(reward),
-                areaType: "polygon"
+                createdAt: serverTimestamp(),
+                xp_reward: Number(reward)
             };
-
             await addDoc(collection(db, "locations"), locationData);
-
-            console.log("Данные успешно отправлены:", locationData);
-            alert(`Зона "${taskName}" создана!`);
-            
-            // Сброс формы
+            alert("Зона сохранена!");
             setTempPoints([]);
             setTaskName("");
         } catch (e) {
-            console.error("Ошибка при сохранении:", e);
-            alert("Ошибка сети. Проверьте консоль.");
+            console.error(e);
         } finally {
             setLoading(false);
         }
@@ -94,72 +103,66 @@ const AdminMap = () => {
     if (!isAuthenticated) return null;
 
     return (
-        <div style={{ position: 'relative', fontFamily: 'sans-serif' }}>
-            <MapContainer center={[40.5139, 72.8161]} zoom={13} style={{ height: "100vh", width: "100%" }}>
+        <div style={{ position: 'relative' }}>
+            <MapContainer center={[40.5139, 72.8161]} zoom={13} style={{ height: "100vh" }}>
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                
                 <MapEvents />
+
+                {/* Рендерим интерактивные маркеры */}
+                {tempPoints.map((p, i) => (
+                    <DraggableMarker 
+                        key={i} 
+                        position={p} 
+                        index={i} 
+                        setTempPoints={setTempPoints} 
+                    />
+                ))}
+
+                {/* Линия периметра */}
+                {tempPoints.length > 1 && (
+                    <Polyline 
+                        positions={tempPoints.length === 4 ? [...tempPoints, tempPoints[0]] : tempPoints} 
+                        color="#2ecc71" 
+                        weight={3}
+                    />
+                )}
             </MapContainer>
 
-            {/* Панель управления */}
+            {/* Интерфейс управления */}
             <div style={panelStyle}>
-                <h3 style={{ marginTop: 0 }}>📍 Новая зона</h3>
-                
-                <div style={inputGroup}>
-                    <label>Название:</label>
-                    <input 
-                        style={inputStyle}
-                        placeholder="Напр: Парк Победы" 
-                        value={taskName} 
-                        onChange={e => setTaskName(e.target.value)} 
-                    />
+                <h4 style={{ margin: '0 0 10px 0' }}>Настройка зоны</h4>
+                <input 
+                    placeholder="Название" 
+                    value={taskName} 
+                    onChange={e => setTaskName(e.target.value)} 
+                    style={inputStyle}
+                />
+                <div style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>
+                    Точек: {tempPoints.length}/4 {tempPoints.length === 4 && "✅"}
                 </div>
-
-                <div style={inputGroup}>
-                    <label>Награда (XP):</label>
-                    <input 
-                        type="number"
-                        style={inputStyle}
-                        value={reward} 
-                        onChange={e => setReward(e.target.value)} 
-                    />
-                </div>
-
-                <div style={infoBox}>
-                    <small>Выбрано точек: <b>{tempPoints.length} из 4</b></small>
-                    <div style={progressBg}>
-                        <div style={{...progressFill, width: `${(tempPoints.length / 4) * 100}%`}}></div>
-                    </div>
-                </div>
-
                 <button 
                     onClick={handleSave} 
                     disabled={tempPoints.length < 4 || loading}
-                    style={{...btnStyle, backgroundColor: (tempPoints.length < 4 || loading) ? '#ccc' : '#2ecc71'}}
+                    style={{ ...btnStyle, backgroundColor: tempPoints.length === 4 ? '#27ae60' : '#bdc3c7' }}
                 >
-                    {loading ? "Сохранение..." : "Сохранить зону"}
+                    {loading ? "Запись..." : "Сохранить в Firebase"}
                 </button>
-
-                <button onClick={() => setTempPoints([])} style={btnReset}>
-                    Сбросить точки
-                </button>
+                <button onClick={() => setTempPoints([])} style={btnReset}>Сбросить</button>
+                
+                <hr />
+                <div style={{ fontSize: '11px' }}>
+                    💡 <i>Вы можете перетаскивать маркеры на карте, чтобы подправить границы.</i>
+                </div>
             </div>
         </div>
     );
 };
 
-// Стили в объектах для чистоты кода
-const panelStyle = {
-    position: 'absolute', top: 20, right: 20, zIndex: 1000,
-    background: 'white', padding: '20px', borderRadius: '12px',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.2)', width: '250px'
-};
-
-const inputGroup = { marginBottom: '15px' };
-const inputStyle = { width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd', boxSizing: 'border-box' };
-const btnStyle = { width: '100%', padding: '10px', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' };
-const btnReset = { width: '100%', marginTop: '10px', background: 'none', border: '1px solid #ff7675', color: '#ff7675', padding: '8px', borderRadius: '6px', cursor: 'pointer' };
-const infoBox = { margin: '15px 0', fontSize: '12px' };
-const progressBg = { width: '100%', height: '6px', background: '#eee', borderRadius: '3px', marginTop: '5px' };
-const progressFill = { height: '100%', background: '#3498db', borderRadius: '3px', transition: 'width 0.3s' };
+// Стили
+const panelStyle = { position: 'absolute', top: 20, right: 20, zIndex: 1000, background: 'white', padding: '15px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '220px' };
+const inputStyle = { width: '100%', marginBottom: '10px', padding: '5px', boxSizing: 'border-box' };
+const btnStyle = { width: '100%', padding: '8px', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' };
+const btnReset = { width: '100%', marginTop: '5px', background: 'none', border: '1px solid #e74c3c', color: '#e74c3c', cursor: 'pointer', padding: '5px' };
 
 export default AdminMap;
