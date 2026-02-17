@@ -20,7 +20,7 @@ const Home = (t) => {
         
         <div className="hero-bottom">
           <div className="hero-desc">
-            <p>Мы создаем новую культуру городского пространства. Присоединяйся к волонтерам, которые делают свой дом чище каждый день.</p>
+            <p>{t('hero.descritpion')}</p>
             <button className="btn-minimal" onClick={() => navigate('/map')}>
               Начать участие —
             </button>
@@ -90,5 +90,6 @@ const Home = (t) => {
 
 
 export default Home;
+
 
 
