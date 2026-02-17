@@ -109,7 +109,7 @@ function App() {
             to="/profile"
             className={({ isActive }) => 
             isActive ? "nav-item active" : "nav-item"}>
-              <CgProfile />Profile
+              <CgProfile />{t("nav.profile")}
             </NavLink>
           </div>
 
