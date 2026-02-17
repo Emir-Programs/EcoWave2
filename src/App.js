@@ -104,15 +104,7 @@ function App() {
               <GiTrophyCup className="icon" />
               <span className="label">{t("nav.rank")}</span>
             </NavLink>
-            <NavLink
-              to="/fund"
-              className={({ isActive }) =>
-                isActive ? "nav-item active" : "nav-item"
-              }
-            >
-              <FaMoneyBill1Wave className="icon" />
-              <span className="label">{t("nav.fund")}</span>
-            </NavLink>
+            
             <NavLink 
             to="/profile"
             className={({ isActive }) => 
