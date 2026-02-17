@@ -9,7 +9,6 @@ import {
 import Home from "./pages/home/Home";
 import MapPage from "./pages/map/Map";
 import RankPage from "./pages/ranks/Rank";
-import FundPage from "./pages/fund/Fund";
 import ProfilePage from "./pages/profile1/Profile";
 import AdminMap from "./pages/AdminMap/AdminMap";
 import "./app/App.css";
@@ -136,7 +135,6 @@ function App() {
               element={currentUser ? <MapPage user={currentUser} /> : <Navigate to="/auth" />} 
             />
             <Route path="/rank" element={<RankPage />} />
-            <Route path="/fund" element={<FundPage />} />
             <Route
               path="/profile"
               element={
