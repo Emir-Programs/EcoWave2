@@ -2,17 +2,21 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './Home.css';
+import '../../app/i18n'
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const navigate = useNavigate();
+   const { t, i18n } = useTranslation();
 
+  
   return (
     <div className="home-container">
       {/* 1. HERO - ГЛАВНЫЙ ЭКРАН */}
       <section className="hero-section">
         <div className="hero-top">
           <span className="hero-label">ENVIRONMENTAL PROJECT 2026</span>
-          <h1 className="hero-title">Волна перемен <br/>в городе Ош</h1>
+          <h1 className="hero-title">{t('hero.title')}<br/>{t('hero.subtitle')}</h1>
         </div>
         
         <div className="hero-bottom">
@@ -87,3 +91,4 @@ const Home = () => {
 
 
 export default Home;
+
