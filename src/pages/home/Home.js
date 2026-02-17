@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './Home.css';
 import '../../app/i18n'
-import { useTranslation } from "react-i18next";
 
 const Home = (t) => {
   const navigate = useNavigate();
@@ -90,6 +89,7 @@ const Home = (t) => {
 
 
 export default Home;
+
 
 
 
