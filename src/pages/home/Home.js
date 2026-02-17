@@ -14,12 +14,12 @@ const Home = (t) => {
       <section className="hero-section">
         <div className="hero-top">
           <span className="hero-label">ENVIRONMENTAL PROJECT 2026</span>
-          <h1 className="hero-title">{t('hero.title')}<br/>{t('hero.subtitle')}</h1>
+          <h1 className="hero-title">Волна перемен <br/> в городе Ош</h1>
         </div>
         
         <div className="hero-bottom">
           <div className="hero-desc">
-            <p>{t('hero.descritpion')}</p>
+            <p>Мы создаем новую культуру городского пространства. Присоединяйся к волонтерам, которые делают свой дом чище каждый день.</p>
             <button className="btn-minimal" onClick={() => navigate('/map')}>
               Начать участие —
             </button>
