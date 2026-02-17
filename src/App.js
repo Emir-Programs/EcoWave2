@@ -123,7 +123,7 @@ function App() {
 
         <main className="content">
           <Routes>
-            <Route path="/" element={<Home t={useTranslation()} />} />
+            <Route path="/" element={<Home  />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route 
               path="/map" 
