@@ -112,13 +112,7 @@ function App() {
               <CgProfile />{t("nav.profile")}
             </NavLink>
           </div>
-
-          {/* Переключатель языков */}
-          <div className="lang-switcher">
-            <button onClick={() => changeLanguage("ru")}>RU</button>
-            <button onClick={() => changeLanguage("kg")}>KG</button>
-            <button onClick={() => changeLanguage("en")}>EN</button>
-          </div>
+              
         </nav>
 
         <main className="content">
